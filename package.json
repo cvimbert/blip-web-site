@@ -1,0 +1,25 @@
+{
+  "name": "blip-web-site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "systemjs.config.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cvimbert/blip-web-site.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cvimbert/blip-web-site/issues"
+  },
+  "homepage": "https://github.com/cvimbert/blip-web-site#readme",
+  "dependencies": {
+    "blip-framework": "github:cvimbert/blip-framework"
+  }
+}
