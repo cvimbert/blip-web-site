@@ -20,6 +20,6 @@
   },
   "homepage": "https://github.com/cvimbert/blip-web-site#readme",
   "dependencies": {
-    "blip-framework": "github:cvimbert/blip-framework"
+    "blip-framework": "^1.0.1"
   }
 }
