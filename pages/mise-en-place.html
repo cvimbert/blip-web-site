@@ -1,0 +1,102 @@
+<h1>
+    Mise en place
+</h1>
+<section>
+    <h2>
+        Installation d'un IDE ou d'un éditeur de texte
+    </h2>
+    <p>
+        Le premier outil dont vous allez avoir besoin pour créer votre jeu est d'un environnement de développement (ou IDE, en
+        anglais, soit Integrated Development Environment), permettant l'édition du TypeScript.
+    </p>
+    <p>
+        Dans le cadre de mon travail j'utilise PHPStorm, mais celui-ci ayant l'inconvénient d'être payant, je vous conseille d'installer
+        NetBeans qui est un très bon IDE OpenSource, avec son extension TypeScript. Il existe quantité d'autres IDE. Si vous êtes
+        développeur, votre préférence doit sûrement déjà se porter sur un en particulier...
+    </p>
+    <p>
+        A défaut vous pouvez utiliser un éditeur de texte (par exemple Notepad++), mais votre travail s'en trouvera pas mal compliqué.
+        (Vous comprendrez pourquoi plus tard).
+    </p>
+</section>
+
+<section>
+    <h2>
+        Installation de NodeJS
+    </h2>
+    <p>
+        NodeJS est un runtime Javascript, autrement dit un outil permettant d'éxécuter de tâches développées en Javascript.
+    </p>
+    <p>
+        Vous allez me dire: "Mais pourtant le Javascript de mon futur jeu sera éxécuté par le navigateur web !", ce en quoi vous
+        aurez totalement raison.
+    </p>
+    <p>
+        Mais toutes les tâches nécessaires à la création de ce qui sera éxécuté par la navigateur web seront gérées par NodeJS :
+    </p>
+    <ul>
+        <li>Téléchargement et installation de toutes les librairies de code nécessaires au projet</li>
+        <li>Compilation du code TypeScript vers du Javascript</li>
+        <li>Lancement du serveur qui va vous permettre de visualiser votre jeu au fur et à mesure de son développement</li>
+        <li>Création des livrables destinés à une publication web</li>
+        <li>Et pour les téméraires, la création d'une build mobile</li>
+    </ul>
+    <p>
+        Rien de plus facile que d'installer NodeJs : il suffit d'aller sur le site de celui-ci, de télécharger le bon installeur
+        et de le lancer. Le reste se fait tout seul.
+    </p>
+</section>
+
+<section>
+    <h2>Installer Git for Windows (ou son équivalent pour votre système) - Optionnel</h2>
+    <p>
+        Git est un outil de versioning des sources code d'un projet informatique. Il vous permet de conserver de manière incrémentielle
+        l'état de votre projet au fur et à mesure de son développement.
+    </p>
+    <p>
+        Dans notre projet, il nous servira surtout à cloner le projet de base de blip, de manière à ce que vous puissiez commencer
+        à travailler dans les meilleures conditions.
+    </p>
+</section>
+
+<section>
+    <h2>
+        Clonage du projet de base
+    </h2>
+    <p>
+        Grâce à git, vous allez pouvoir installer sur votre ordinateur un projet Blip vide.
+    </p>
+    <p>
+        Url du projet à cloner : http://github.com/cvimbert/blip-empty-projet.git
+    </p>
+    <p>
+        Je ne vais pas rentrer dans les détails, mais si vous utilisez un IDE, cette opération, dîte "Checkout" peut être accomplie
+        par celui-ci. Pour le checkout à l'aide de NetBeans, vous trouverez les explications ici.
+    </p>
+    <p>
+        Si jamais vous voulez vous passer de Git pour cloner le projet de base, vous pouvez toujours télécharger le zip du
+        projet ici.
+    </p>
+</section>
+
+<section>
+    <h2>
+        Installation des librairies de code
+    </h2>
+    <p>
+        Dans une console de commande, déplacez-vous vers le dossier de votre projet, et lancez la commande suivante:
+        <br>
+        <code>npm install</code>
+        <br>
+        Il est possible que cette commande mette plusieurs minutes à s'éxécuter (toutes les librairies sont téléchargées sur Internet).
+    </p>
+</section>
+
+<section>
+    <h2>
+        Et voilà !
+    </h2>
+    <p>
+        En toute logique le projet est prêt. On peut maintenant passer à l'éxécution du projet.
+    </p>
+</section>

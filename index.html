@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="fonts/Lato-Bold.css">
+    <link rel="stylesheet" href="fonts/Lato-Regular.css">
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <style>
+        body {
+            color: black;
+        }
+
+        h1, h2, h3 {
+            font-family: Lato-Bold;
+            margin-left: 15px;
+        }
+
+        p, ul {
+            font-family: Lato;
+            margin-left: 60px;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #left {
+            font-size: 12px;
+            width: 240px;
+        }
+
+        #right {
+            flex: 1;
+        }
+
+        #left, #right {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        #left ul {
+            margin-left: 0;
+            width: 150px;
+        }
+
+        .list-container {
+            position: fixed;
+        }
+
+        #left li {
+            margin: 5px 0 5px 0;
+        }
+    </style>
+    <title>Introduction</title>
+</head>
+<body>
+<div id="container">
+    <div id="left">
+        <div class="list-container">
+            <ul id="index">
+
+            </ul>
+        </div>
+    </div>
+    <div id="right">
+
+    </div>
+</div>
+<div id="fin"></div>
+<script src="js/index.js"></script>
+</body>
+</html>
