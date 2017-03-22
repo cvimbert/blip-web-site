@@ -11,7 +11,7 @@
         map: {
             src: "src",
             'rxjs': 'npm:rxjs',
-            'blip-framework/core': 'npm:blip-framework/core'
+            'blip-framework/core': 'npm:blip-framework/core/index'
         },
         packages: {
             src: {

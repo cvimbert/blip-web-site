@@ -1,0 +1,35 @@
+@font-face {
+    font-family: 'Digital-7Italic';
+    src: url('../fonts/digital-7/Digital-7Italic.eot?#iefix') format('embedded-opentype'),  url('../fonts/digital-7/Digital-7Italic.woff') format('woff'), url('../fonts/digital-7/Digital-7Italic.ttf')  format('truetype'), url('../fonts/digital-7/Digital-7Italic.svg#Digital-7Italic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Digital-7';
+    src: url('../fonts/digital-7/Digital-7.eot?#iefix') format('embedded-opentype'),  url('../fonts/digital-7/Digital-7.woff') format('woff'), url('../fonts/digital-7/Digital-7.ttf')  format('truetype'), url('../fonts/digital-7/Digital-7.svg#Digital-7') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.game-element {
+    position: absolute;
+    transform-origin: 0 0;
+}
+
+.game-element.active {
+    opacity: 1;
+}
+
+.game-element.inactive {
+    opacity: 0.2;
+}
+
+.control {
+    cursor: pointer;
+}
+
+.seg7-displayer {
+    font-family: Digital-7;
+    font-size: 40px;
+}
