@@ -163,17 +163,23 @@
 
                 var codeContainer = document.createElement("div");
                 codeContainer.classList.add("code-display");
+                var pre = document.createElement("pre");
+                codeContainer.appendChild(pre);
+                var coded = document.createElement("code");
+                coded.classList.add("typescript");
+                pre.appendChild(coded);
                 cont.appendChild(codeContainer);
 
                 var codeReq = new XMLHttpRequest();
                 codeReq.open('GET', "examples/" + scriptId + "/" + scriptId + ".ts");
                 codeReq.overrideMimeType("text/html");
+
                 codeReq.onload = function () {
                     var codeHtml = String(codeReq.response);
-
-                    codeHtml = codeHtml.replaceAll("\r\n", "<br>");
-
-                    codeContainer.innerHTML = codeHtml;
+                    //codeHtml = codeHtml.replaceAll("\r\n", "<br>");
+                    coded.innerHTML = codeHtml;
+                    //hljs.configure({useBR: true});
+                    hljs.highlightBlock(coded);
                 };
                 codeReq.send();
 
