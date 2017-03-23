@@ -74,7 +74,7 @@
 
         var htmlContainer = $("#right");
         var contentHtml = $(pageHtml);
-        htmlContainer.append(contentHtml);
+        htmlContainer.html(contentHtml);
 
         var sections = $("section");
         var index = $("#index");
