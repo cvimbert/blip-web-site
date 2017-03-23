@@ -7,6 +7,7 @@
     var dictionary = ["Sprite", "File"];
 
     var hljs = require("node_modules/highlight.js/lib/index.js");
+    var $ = require("node_modules/jquery/dist/jquery.js");
 
     function loadPages(pagesIndex, callback) {
 
@@ -71,34 +72,36 @@
 
         //document.body.style.visibility = "visible";
 
-        var htmlContainer = document.getElementById("right");
-        htmlContainer.innerHTML = pageHtml;
+        var htmlContainer = $("#right");
+        var contentHtml = $(pageHtml);
+        htmlContainer.append(contentHtml);
 
-        var sections = document.getElementsByTagName("section");
-        var index = document.getElementById("index");
+        var sections = $("section");
+        var index = $("#index");
         var id = 0;
 
-        var ul = document.createElement("ul");
+        var ul = $("<ul></ul>");
 
-        for (var i = 0; i < sections.length; i++) {
-            var section = sections[i];
-            var title = section.getElementsByTagName("h2")[0];
+        sections.each(function () {
+            var title = $("h2", this);
             var idt = "t" + id;
-            title.id = idt;
-            var li = document.createElement("li");
-            var al = document.createElement("a");
-            al.href = "#" + idt;
-            al.innerHTML = title.innerHTML;
-            li.appendChild(al);
+            title.attr("id", idt);
 
-            ul.appendChild(li);
+            var subElem = $(
+                "<li>" +
+                    "<a></a>" +
+                "</li>"
+            );
 
+            ul.append(subElem);
+
+            var link = $("a", subElem);
+            link.html(title.html());
+            link.attr("href", "#" + idt);
             id++;
-        }
+        });
 
-        index.appendChild(ul);
-
-        //document.body.style.visibility = "visible";
+        index.append(ul);
     }
 
     var pagesPaths = [
@@ -137,38 +140,55 @@
 
     loadPages(pagesPaths, function (pages) {
 
-        var index = document.getElementById("index");
+        var index = $("#index");
         var currentPageId = getId();
 
         for (var i = 0; i < pagesPaths.length; i++) {
-            var element = document.createElement("div");
-            element.innerHTML = pages[pagesPaths[i]];
 
-            var title = element.getElementsByTagName("h1")[0].innerHTML;
-            var li = document.createElement("li");
-            li.id = cleanPath(pagesPaths[i]);
+            var element = $("<div></div>");
 
-            var al = document.createElement("a");
-            al.href = "?q=" + cleanPath(pagesPaths[i]);
-            al.innerHTML = title;
-            li.appendChild(al);
+            var contentElement = $(pages[pagesPaths[i]]);
+            element.append(contentElement);
 
-            index.appendChild(li);
+            var title = $("h1", element).html();
+
+            var li = $(
+                "<li>" +
+                    "<a></a>" +
+                "</li>"
+            );
+
+            li.attr("id", cleanPath(pagesPaths[i]));
+
+            var al = $("a", li);
+            al.attr("href", "?q=" + cleanPath(pagesPaths[i]));
+            al.html(title);
+
+            index.append(li);
 
             if (cleanPath(pagesPaths[i]) === currentPageId) {
+
                 contructPage(pages[pagesPaths[i]]);
 
-                var scriptContainers = element.getElementsByClassName("script-def");
-                var gameContainers = element.getElementsByClassName("game-def");
+                var scriptContainers = $(".script-def");
+                var gameContainers = $(".game-def");
 
-                for (var j = 0; j < scriptContainers.length; j++) {
+                scriptContainers.each(function () {
+                    var scriptId = $(this).attr("id");
+                    var codeContainer = $("<div class='code-display'><pre><code class='typescript'></code></pre></div>");
+                    $(this).append(codeContainer);
+                    var codeBlock = $("code", this);
+
+                    $.get("examples/" + scriptId + "/" + scriptId + ".ts", function (res) {
+                        res = res.applyDictionary(dictionary);
+                        codeBlock.html(res);
+                        hljs.highlightBlock(codeBlock.get(0));
+                    });
+                });
+
+                /*for (var j = 0; j < scriptContainers.length; j++) {
                     var scriptId = scriptContainers[j].id;
                     var cont = document.getElementById(scriptId);
-
-                    /*var exampleContainer = document.createElement("div");
-                     exampleContainer.classList.add("example-container");
-                     exampleContainer.id = scriptId + "-container";
-                     cont.appendChild(exampleContainer);*/
 
                     var codeContainer = document.createElement("div");
                     codeContainer.classList.add("code-display");
@@ -192,8 +212,8 @@
                     };
                     codeReq.send();
 
-                    //loadScript(scriptId);
-                }
+                    loadScript(scriptId);
+                }*/
             }
         }
 
