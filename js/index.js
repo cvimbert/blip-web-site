@@ -3,6 +3,11 @@
  */
 
 (function () {
+
+    var dictionary = ["Sprite", "File"];
+
+    var hljs = require("node_modules/highlight.js/lib/index.js");
+
     function loadPages(pagesIndex, callback) {
 
         var pagesHtml = {};
@@ -40,12 +45,16 @@
     String.prototype.applyDictionary = function (dictionary) {
         var tmp = this;
 
-        dictionary.each(function (elem) {
-            tmp.replaceAll(elem, "<span class='" + elem + "-entry'></span>")
-        });
+        for (var i = 0; i < dictionary.length; i++) {
+            tmp = tmp.replaceAll(dictionary[i], "<span class='dictionary-entry " + dictionary[i].toLowerCase() + "-entry'>TMP</span>");
+            tmp = tmp.replaceAll("TMP", dictionary[i]);
+        }
 
         return tmp;
     };
+
+    var hh = "voilà un Sprite";
+    hh = hh.applyDictionary(dictionary);
 
     function loadPage(pagePath, callback) {
 
@@ -83,7 +92,7 @@
             li.appendChild(al);
 
             ul.appendChild(li);
-            
+
             id++;
         }
 
@@ -148,44 +157,47 @@
 
             if (cleanPath(pagesPaths[i]) === currentPageId) {
                 contructPage(pages[pagesPaths[i]]);
-            }
 
-            var scriptContainers = element.getElementsByClassName("script-def");
+                var scriptContainers = element.getElementsByClassName("script-def");
+                var gameContainers = element.getElementsByClassName("game-def");
 
-            for (var j = 0; j < scriptContainers.length; j++) {
-                var scriptId = scriptContainers[j].id;
-                var cont = document.getElementById(scriptId);
+                for (var j = 0; j < scriptContainers.length; j++) {
+                    var scriptId = scriptContainers[j].id;
+                    var cont = document.getElementById(scriptId);
 
-                var exampleContainer = document.createElement("div");
-                exampleContainer.classList.add("example-container");
-                exampleContainer.id = scriptId + "-container";
-                cont.appendChild(exampleContainer);
+                    /*var exampleContainer = document.createElement("div");
+                     exampleContainer.classList.add("example-container");
+                     exampleContainer.id = scriptId + "-container";
+                     cont.appendChild(exampleContainer);*/
 
-                var codeContainer = document.createElement("div");
-                codeContainer.classList.add("code-display");
-                var pre = document.createElement("pre");
-                codeContainer.appendChild(pre);
-                var coded = document.createElement("code");
-                coded.classList.add("typescript");
-                pre.appendChild(coded);
-                cont.appendChild(codeContainer);
+                    var codeContainer = document.createElement("div");
+                    codeContainer.classList.add("code-display");
 
-                var codeReq = new XMLHttpRequest();
-                codeReq.open('GET', "examples/" + scriptId + "/" + scriptId + ".ts");
-                codeReq.overrideMimeType("text/html");
+                    // pre est inutile
+                    var pre = document.createElement("pre");
+                    codeContainer.appendChild(pre);
+                    var coded = document.createElement("code");
+                    coded.classList.add("typescript");
+                    pre.appendChild(coded);
+                    cont.appendChild(codeContainer);
 
-                codeReq.onload = function () {
-                    var codeHtml = String(codeReq.response);
-                    //codeHtml = codeHtml.replaceAll("\r\n", "<br>");
-                    coded.innerHTML = codeHtml;
-                    //hljs.configure({useBR: true});
-                    hljs.highlightBlock(coded);
-                };
-                codeReq.send();
+                    var codeReq = new XMLHttpRequest();
+                    codeReq.open('GET', "examples/" + scriptId + "/" + scriptId + ".ts");
+                    codeReq.overrideMimeType("text/html");
 
-                loadScript(scriptId);
+                    codeReq.onload = function () {
+                        var codeHtml = codeReq.responseText.applyDictionary(dictionary);
+                        coded.innerHTML = codeHtml;
+                        hljs.highlightBlock(coded);
+                    };
+                    codeReq.send();
+
+                    //loadScript(scriptId);
+                }
             }
         }
+
+
     });
 
 })();
