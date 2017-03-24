@@ -105,7 +105,7 @@
                 $(this).append(blocksLine);
 
                 links.each(function () {
-                    var linkBlock = $("<div class='link-block'><a><span class='title'></span></a></div>");
+                    var linkBlock = $("<div class='link-block'><a><span class='title'></span></a><div class='ico fa fa-external-link'></div></div>");
                     $(".title", linkBlock).html($(this).attr("title"));
                     var blockLink = $("a", linkBlock);
                     blockLink.attr("href", $(this).attr("href"));
