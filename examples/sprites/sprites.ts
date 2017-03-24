@@ -1,10 +1,10 @@
 import {Sprite, File} from "blip-framework/core";
 
 // Instanciation de l'image utilisée pour le sprite
-var file:File = new File("files/sprites/p4-body.png");
+var file:File = new File("files/sprites/character-1.png");
 
-// Création du sprite, positionné aux coordonnées x: 20 et y:20
-var sprite:Sprite = new Sprite(file, 20, 20);
+// Création du sprite, positionné aux coordonnées x: 300 et y: 30
+var sprite:Sprite = new Sprite(file, 300, 30);
 
 // Ajout du sprite au DOM
 sprite.displayInDOMElement(document.getElementById("sprites-container"));

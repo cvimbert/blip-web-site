@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="fonts/Lato-Bold.css">
     <link rel="stylesheet" href="fonts/Lato-Regular.css">
     <link rel="stylesheet" href="node_modules/highlight.js/styles/default.css">
-    <link rel="stylesheet" href="node_modules/highlight.js/styles/ocean.css">
+    <link rel="stylesheet" href="node_modules/highlight.js/styles/paraiso-light.css">
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/systemjs/dist/system.src.js"></script>
@@ -33,15 +33,113 @@
         }
 
         code {
-            padding: 25px !important;
-            border-radius: 15px;
-            max-width: 650px;
+            padding: 15px !important;
+            padding-top: 38px !important;
         }
 
         .code-display {
             margin-left: auto;
             margin-right: auto;
             width: 650px;
+        }
+
+        .code-display pre {
+            margin: 0;
+        }
+
+        .top-displayer {
+            border: 1px solid grey;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            border-bottom: hidden;
+        }
+
+        .link-blocks-line {
+            text-align: right;
+        }
+
+        .link-block {
+            display: inline-block;
+            width: 120px;
+            height: 50px;
+            font-family: monospace, serif;
+            background-color: lightcyan;
+            border: 1px solid darkslategray;
+            border-radius: 6px;
+            margin-left: 10px;
+            vertical-align: top;
+        }
+
+        .link-block a {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .link-block.over, .link-block:hover {
+            background-color: lightgreen;
+        }
+
+        .bottom-displayer {
+            border: 1px solid grey;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            border-top: hidden;
+        }
+
+        .code-header {
+            float: right;
+            height: 24px;
+            background-color: slategray;
+            color: white;
+            font-family: monospace;
+            padding-right: 20px;
+            padding-left: 10px;
+            line-height: 23px;
+            border-left: 1px solid grey;
+        }
+
+        .script-tools {
+            position: absolute;
+            font-family: monospace;
+            padding-left: 10px;
+            line-height: 23px;
+            color: darkslategray;
+            top: 0;
+            width: 100%;
+            background-color: #cccccc;
+            border-bottom: 1px solid slategray;
+            height: 24px;
+
+        }
+
+        .script-def {
+            position: relative;
+            margin-left: auto;
+            margin-right: auto;
+            width: 650px;
+            overflow: hidden;
+        }
+
+        .game-def {
+            border: 1px solid grey;
+            position: relative;
+            width: 650px;
+            height: 300px;
+            background-color: lightgoldenrodyellow;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .sh {
+            height: 120px;
+        }
+
+        .bottom-controls {
+            position: absolute;
+            bottom: 6px;
+            width: 100%;
+            text-align: center;
         }
 
         #container {

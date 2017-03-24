@@ -54,9 +54,6 @@
         return tmp;
     };
 
-    var hh = "voilà un Sprite";
-    hh = hh.applyDictionary(dictionary);
-
     function loadPage(pagePath, callback) {
 
         var req = new XMLHttpRequest();
@@ -99,6 +96,31 @@
             link.html(title.html());
             link.attr("href", "#" + idt);
             id++;
+
+            // et les liens
+            var links = $("a", this);
+
+            if (links.length > 0) {
+                var blocksLine = $("<div class='link-blocks-line'></div>");
+                $(this).append(blocksLine);
+
+                links.each(function () {
+                    var linkBlock = $("<div class='link-block'><a><span class='title'></span></a></div>");
+                    $(".title", linkBlock).html($(this).attr("title"));
+                    var blockLink = $("a", linkBlock);
+                    blockLink.attr("href", $(this).attr("href"));
+                    blockLink.attr("target", $(this).attr("target"));
+                    blocksLine.append(linkBlock);
+
+                    $(this).on("mouseover", function () {
+                        linkBlock.addClass("over");
+                    });
+
+                    $(this).on("mouseout", function () {
+                        linkBlock.removeClass("over");
+                    });
+                });
+            }
         });
 
         index.append(ul);
@@ -174,8 +196,18 @@
                 var gameContainers = $(".game-def");
 
                 scriptContainers.each(function () {
-                    var scriptId = $(this).attr("id");
+                    var scriptId = $(this).data("script");
                     var codeContainer = $("<div class='code-display'><pre><code class='typescript'></code></pre></div>");
+                    var header = $("<div class='script-tools'><span class='title'></span><div class='code-header'>header</div></div>");
+                    var blockTitle = $(this).data("name");
+
+                    if (!blockTitle) {
+                        blockTitle = "Code de l'exemple :";
+                    }
+
+                    $(".title", header).html(blockTitle);
+                    $(".code-header", header).html("> " + scriptId + ".ts");
+                    $(this).append(header);
                     $(this).append(codeContainer);
                     var codeBlock = $("code", this);
 
@@ -185,35 +217,14 @@
                         hljs.highlightBlock(codeBlock.get(0));
                     });
                 });
-
-                /*for (var j = 0; j < scriptContainers.length; j++) {
-                    var scriptId = scriptContainers[j].id;
-                    var cont = document.getElementById(scriptId);
-
-                    var codeContainer = document.createElement("div");
-                    codeContainer.classList.add("code-display");
-
-                    // pre est inutile
-                    var pre = document.createElement("pre");
-                    codeContainer.appendChild(pre);
-                    var coded = document.createElement("code");
-                    coded.classList.add("typescript");
-                    pre.appendChild(coded);
-                    cont.appendChild(codeContainer);
-
-                    var codeReq = new XMLHttpRequest();
-                    codeReq.open('GET', "examples/" + scriptId + "/" + scriptId + ".ts");
-                    codeReq.overrideMimeType("text/html");
-
-                    codeReq.onload = function () {
-                        var codeHtml = codeReq.responseText.applyDictionary(dictionary);
-                        coded.innerHTML = codeHtml;
-                        hljs.highlightBlock(coded);
-                    };
-                    codeReq.send();
-
+                
+                gameContainers.each(function () {
+                    var scriptId = $(this).data("script");
+                    var elem = $("<div></div>");
+                    $(this).append(elem);
+                    elem.attr("id", scriptId + "-container");
                     loadScript(scriptId);
-                }*/
+                });
             }
         }
 
