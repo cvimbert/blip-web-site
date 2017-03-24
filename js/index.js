@@ -6,8 +6,8 @@
 
     var dictionary = ["Sprite", "File"];
 
-    var hljs = require("node_modules/highlight.js/lib/index.js");
-    var $ = require("node_modules/jquery/dist/jquery.js");
+    var hljs = require("highlightjs");
+    var $ = require("jquery");
 
     function loadPages(pagesIndex, callback) {
 
@@ -65,7 +65,9 @@
         req.send();
     }
 
-    function contructPage(pageHtml) {
+    function contructPage(pageId, pageHtml) {
+
+        $(".sub-menu").html("");
 
         //document.body.style.visibility = "visible";
 
@@ -76,8 +78,6 @@
         var sections = $("section");
         var index = $("#index");
         var id = 0;
-
-        var ul = $("<ul></ul>");
 
         sections.each(function () {
             var title = $("h2", this);
@@ -90,7 +90,7 @@
                 "</li>"
             );
 
-            ul.append(subElem);
+            $("#sub-menu-" + cleanPath(pageId)).append(subElem);
 
             var link = $("a", subElem);
             link.html(title.html());
@@ -123,13 +123,46 @@
             }
         });
 
-        index.append(ul);
+        var scriptContainers = $(".script-def", contentHtml);
+        var gameContainers = $(".game-def", contentHtml);
+
+        scriptContainers.each(function () {
+            var scriptId = $(this).data("script");
+            var codeContainer = $("<div class='code-display'><pre><code class='typescript'></code></pre></div>");
+            var header = $("<div class='script-tools'><span class='title'></span><div class='code-header'>header</div></div>");
+            var blockTitle = $(this).data("name");
+
+            if (!blockTitle) {
+                blockTitle = "Code de l'exemple :";
+            }
+
+            $(".title", header).html(blockTitle);
+            $(".code-header", header).html("> " + scriptId + ".ts");
+            $(this).append(header);
+            $(this).append(codeContainer);
+            var codeBlock = $("code", this);
+
+            $.get("examples/" + scriptId + "/" + scriptId + ".ts", function (res) {
+                res = res.applyDictionary(dictionary);
+                codeBlock.html(res);
+                hljs.highlightBlock(codeBlock.get(0));
+            });
+        });
+
+        gameContainers.each(function () {
+            var scriptId = $(this).data("script");
+            var elem = $("<div></div>");
+            $(this).append(elem);
+            elem.attr("id", scriptId + "-container");
+            loadScript(scriptId);
+        });
     }
 
     var pagesPaths = [
         "intro",
         "mise-en-place",
-        "api/sprites"
+        "api/sprites",
+        "api/groups"
     ];
 
     function cleanPath(path) {
@@ -156,8 +189,16 @@
         return null;
     }
 
+    var currentScriptId;
+
     function loadScript(id) {
-        System.import('examples/' + id + "/" + id + ".js").catch(function(err){ console.error(err); });
+
+        if (currentScriptId) {
+            System.delete(currentScriptId);
+        }
+
+        currentScriptId = 'examples/' + id + "/" + id + ".js";
+        System.load(currentScriptId).catch(function(err){ console.error(err); });
     }
 
     loadPages(pagesPaths, function (pages) {
@@ -174,57 +215,28 @@
 
             var title = $("h1", element).html();
 
-            var li = $(
-                "<li>" +
-                    "<a></a>" +
-                "</li>"
-            );
+            var li = $("<li class='menu-item'></li>");
+            var sub = $("<ul class='sub-menu'></ul>");
+            sub.attr("id", "sub-menu-" + cleanPath(pagesPaths[i]));
 
             li.attr("id", cleanPath(pagesPaths[i]));
 
-            var al = $("a", li);
-            al.attr("href", "?q=" + cleanPath(pagesPaths[i]));
-            al.html(title);
+            li.attr("data-id", i);
+            //al.attr("href", "?q=" + cleanPath(pagesPaths[i]));
+
+            li.on("click", function () {
+                currentPageId = pagesPaths[$(this).data("id")];
+                contructPage(currentPageId, pages[currentPageId]);
+            });
+
+            li.html(title);
 
             index.append(li);
+            index.append(sub);
 
             if (cleanPath(pagesPaths[i]) === currentPageId) {
 
-                contructPage(pages[pagesPaths[i]]);
-
-                var scriptContainers = $(".script-def");
-                var gameContainers = $(".game-def");
-
-                scriptContainers.each(function () {
-                    var scriptId = $(this).data("script");
-                    var codeContainer = $("<div class='code-display'><pre><code class='typescript'></code></pre></div>");
-                    var header = $("<div class='script-tools'><span class='title'></span><div class='code-header'>header</div></div>");
-                    var blockTitle = $(this).data("name");
-
-                    if (!blockTitle) {
-                        blockTitle = "Code de l'exemple :";
-                    }
-
-                    $(".title", header).html(blockTitle);
-                    $(".code-header", header).html("> " + scriptId + ".ts");
-                    $(this).append(header);
-                    $(this).append(codeContainer);
-                    var codeBlock = $("code", this);
-
-                    $.get("examples/" + scriptId + "/" + scriptId + ".ts", function (res) {
-                        res = res.applyDictionary(dictionary);
-                        codeBlock.html(res);
-                        hljs.highlightBlock(codeBlock.get(0));
-                    });
-                });
-                
-                gameContainers.each(function () {
-                    var scriptId = $(this).data("script");
-                    var elem = $("<div></div>");
-                    $(this).append(elem);
-                    elem.attr("id", scriptId + "-container");
-                    loadScript(scriptId);
-                });
+                contructPage(currentPageId, pages[pagesPaths[i]]);
             }
         }
 

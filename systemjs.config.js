@@ -10,14 +10,12 @@
         },
         map: {
             src: "src",
+            jquery: "npm:jquery/dist/jquery",
+            highlightjs: "npm:highlight.js/lib/index",
             'blip-framework/core': 'npm:blip-framework/core/index'
         },
         packages: {
-            src: {
-                main: '../compiled/main.js',
-                defaultExtension: 'js'
-            },
-            //'blip-framework': { defaultExtension: 'js', main: 'bundles/blip-framework.umd' },
+            
         }
     })
 })(this);
