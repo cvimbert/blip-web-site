@@ -162,7 +162,8 @@
         "intro",
         "mise-en-place",
         "api/sprites",
-        "api/groups"
+        "api/groups",
+        "api/group-states"
     ];
 
     function cleanPath(path) {
