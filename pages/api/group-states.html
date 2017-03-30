@@ -33,6 +33,16 @@
 <section>
     <h2>Un peu lourd, non ?</h2>
     <p>
-
+        Vous avez dû vous faire cette remarque : ce code n'est-il pas un petit peu verbeux ?
+    </p>
+    <p>
+        Effectivement ! On instancie chacun des fichiers, on créé les instances de sprite qu'on ajoute au DOM, on créé
+        le groupe, et les différents états de ce groupe, en exposant à chaque fois des variables qu'on n'aura pas forcément
+        à manipuler plus tard. En bref, ce n'est pas très synthétique, tout ça...
+    </p>
+    <p>
+        C'est là que nous allons faire connaissance de la classe GameScene, et de son extension HTMLGameScene, qui va
+        nous éviter tout ce verbiage inutile, et nous permettre de condenser nos déclarations de sprites, groupes et états, tout en
+        permettant d'accéder à ceux-ci à la demande.
     </p>
 </section>

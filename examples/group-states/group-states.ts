@@ -1,10 +1,12 @@
 import {Sprite, File, SpritesGroupState, SpritesGroup} from "blip-framework/core";
 
+// instanciation des objets File (fichiers)
 var file1:File = new File("files/sprites/character-1.png");
 var file2:File = new File("files/sprites/character-2.png");
 var file3:File = new File("files/sprites/character-3.png");
 var file4:File = new File("files/sprites/character-4.png");
 
+// création et ajout des sprites au DOM
 var sprite1:Sprite = new Sprite(file1, 258, 40);
 sprite1.displayInDOMElement(document.getElementById("group-states-container"));
 var sprite2:Sprite = new Sprite(file2, 343, 40);
@@ -14,13 +16,16 @@ sprite3.displayInDOMElement(document.getElementById("group-states-container"));
 var sprite4:Sprite = new Sprite(file4, 343, 110);
 sprite4.displayInDOMElement(document.getElementById("group-states-container"));
 
+// Création du groupe de sprites
 var group1:SpritesGroup = new SpritesGroup([sprite1, sprite2, sprite3, sprite4]);
 
+// Création des états de groupe
 var state1:SpritesGroupState = new SpritesGroupState(group1, [sprite1, sprite4]);
 var state2:SpritesGroupState = new SpritesGroupState(group1, [sprite3, sprite2]);
 var state3:SpritesGroupState = new SpritesGroupState(group1, [sprite1, sprite2, sprite3, sprite4]);
 var state4:SpritesGroupState = new SpritesGroupState(group1, []);
 
+// Affichage des états au clic sur les boutons
 var state1Button = document.getElementById("state1-display");
 state1Button.onclick = () => state1.display();
 
