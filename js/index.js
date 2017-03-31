@@ -6,6 +6,32 @@
 
     var dictionary = ["Sprite", "File"];
 
+    var pagesPaths = [
+        "intro",
+        "mise-en-place",
+        "api/sprites",
+        "api/groups",
+        "api/group-states"
+    ];
+
+    var tableOfContent = {
+        "blip-project": {
+            title: "Le projet Blip",
+            content: [
+                "intro",
+                "mise-en-place"
+            ]
+        },
+        "display": {
+            title: "L'affichage",
+            content: [
+                "sprites",
+                "groups",
+                "group-states"
+            ]
+        }
+    };
+
     var hljs = require("highlightjs");
     var $ = require("jquery");
 
@@ -157,14 +183,6 @@
             loadScript(scriptId);
         });
     }
-
-    var pagesPaths = [
-        "intro",
-        "mise-en-place",
-        "api/sprites",
-        "api/groups",
-        "api/group-states"
-    ];
 
     function cleanPath(path) {
         return path.replace("/", "-");
