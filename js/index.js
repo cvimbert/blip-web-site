@@ -35,10 +35,129 @@
     var hljs = require("highlightjs");
     var $ = require("jquery");
 
+    var qParam = getId("q");
+    var rParam = getId("r");
+
+    function setLocaleUrl() {
+        setUrl([qParam, rParam]);
+    }
+
+    function pushLocaleUrl() {
+        pushUrl([qParam, rParam]);
+    }
+
+    function generateSubMenu(id, contentSet, subs) {
+        loadPagesSet(id, contentSet["content"], function (datas, cid) {
+
+            if (!rParam) {
+                rParam = Object.keys(datas)[0];
+                pushLocaleUrl();
+            }
+
+            var pageContents = {};
+            var terUls = {};
+
+            for (var pageId in datas) {
+                if (datas.hasOwnProperty(pageId)) {
+                    var pageContent = $("<div></div>");
+                    pageContent.html($(datas[pageId]));
+
+                    var title = $("h1", pageContent).html();
+                    var subLi = $("<li></li>");
+                    subLi.data("pid", pageId);
+                    subLi.html(title);
+
+                    subLi.on("click", function () {
+                        var qr = $(this).data("pid");
+                        rParam = qr;
+                        $(".level-2-sub").html("");
+                        generateSubSubMenu(terUls[qr], pageContents[qr]);
+                        pushLocaleUrl();
+                    });
+
+                    subs[cid].append(subLi);
+
+                    var terUl = $("<ul class='level-2-sub'></ul>");
+                    subs[cid].append(terUl);
+                    terUls[pageId] = terUl;
+                    pageContents[pageId] = pageContent;
+
+                    if (rParam === pageId) {
+                        generateSubSubMenu(terUl, pageContent);
+                    }
+                }
+            }
+        });
+    }
+
+    function generateSubSubMenu(containerUl, pageContent) {
+
+        var sections = $("section", pageContent);
+
+        sections.each(function () {
+            var sectionTitle = $("h2", this).html();
+
+            var subSubLi = $("<li></li>");
+            subSubLi.html(sectionTitle);
+
+            subSubLi.on("click", function () {
+
+            });
+
+            containerUl.append(subSubLi);
+        });
+    }
+
     function loadPages(pagesIndex, callback) {
 
         var pagesHtml = {};
         var count = 0;
+
+        var index2Container = $("#index2");
+        var subs = {};
+
+        if (!qParam) {
+            qParam = Object.keys(tableOfContent)[0];
+            pushLocaleUrl();
+        }
+
+        for (var id in tableOfContent) {
+
+            if (tableOfContent.hasOwnProperty(id)) {
+                var contentSet = tableOfContent[id];
+
+                var li = $("<li class='level-1'></li>");
+                li.attr("id", "lv1-" + id);
+                li.html(contentSet["title"]);
+                li.data("lid", id);
+                index2Container.append(li);
+
+                li.on("click", function () {
+
+                    // pour un effet ulterieur (joli effet de repliage)
+                    //alert (subs[qParam].height());
+
+                    var qp = $(this).data("lid");
+                    qParam = qp;
+                    rParam = null;
+                    pushLocaleUrl();
+
+                    $(".level-1-sub").html("");
+
+                    generateSubMenu(qp, tableOfContent[qp], subs);
+                });
+
+                var sub = $("<ul class='level-1-sub'></ul>");
+                sub.attr("id", id + "-sub");
+                index2Container.append(sub);
+
+                subs[id] = sub;
+
+                if (qParam === id) {
+                    generateSubMenu(id, contentSet, subs);
+                }
+            }
+        }
 
         for (var i = 0; i < pagesIndex.length; i++) {
             loadPage(pagesIndex[i], function (path, html) {
@@ -50,6 +169,10 @@
                 }
             });
         }
+    }
+    
+    function createPagesSetDisplay(contentSet) {
+        
     }
 
     String.prototype.replaceAll = function (search, replacement) {
@@ -89,6 +212,35 @@
             callback(pagePath, req.responseText);
         };
         req.send();
+    }
+
+    function loadPageB(directory, pagePath, callback) {
+
+        var req = new XMLHttpRequest();
+        req.overrideMimeType("text/html");
+        req.open('GET', directory + "/" + pagePath + ".html");
+        req.onload = function () {
+            callback(pagePath, req.responseText);
+        };
+        req.send();
+    }
+
+    function loadPagesSet(id, pagesPaths, callback) {
+
+        var pagesData = {};
+        var count = 0;
+
+        for (var i = 0; i < pagesPaths.length; i++) {
+
+            loadPageB("pages/" + id, pagesPaths[i], function (path, pageContent) {
+                pagesData[path] = pageContent;
+                count++;
+
+                if (count === pagesPaths.length) {
+                    callback(pagesData, id);
+                }
+            });
+        }
     }
 
     function contructPage(pageId, pageHtml) {
@@ -188,7 +340,7 @@
         return path.replace("/", "-");
     }
 
-    function getId() {
+    function getId(key) {
         var searchStr = document.location.search;
 
         if (searchStr.charAt(0) === "?") {
@@ -200,12 +352,35 @@
         for (var i = 0; i < arr.length; i++) {
             var qstr = arr[i].split("=");
 
-            if (qstr[0] === "q") {
+            if (qstr[0] === key) {
                 return qstr[1];
             }
         }
 
         return null;
+    }
+
+    function getUrl(ids) {
+
+        var letters = ["q", "r", "s", "t"];
+        var queryString = "";
+
+        for (var i = 0; i < ids.length; i++) {
+            queryString += letters[i] + "=" + ids[i];
+            if (i !== ids.length - 1) {
+                queryString += "&";
+            }
+        }
+
+        return "?" + queryString;
+    }
+
+    function setUrl(ids) {
+        document.location.href = getUrl(ids);
+    }
+
+    function pushUrl(ids) {
+        window.history.pushState("", "", getUrl(ids));
     }
 
     var currentScriptId;
@@ -223,7 +398,7 @@
     loadPages(pagesPaths, function (pages) {
 
         var index = $("#index");
-        var currentPageId = getId();
+        var currentPageId = getId("q");
 
         for (var i = 0; i < pagesPaths.length; i++) {
 

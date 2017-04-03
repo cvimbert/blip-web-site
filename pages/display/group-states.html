@@ -1,0 +1,48 @@
+<h1>
+    Les états de groupes
+</h1>
+<section>
+    <h2>L'état</h2>
+    <p>
+        On ne peut pas se contenter de gérer directement l'affichage d'un jeu par en changeant les états de sprites ou de groupes,
+        la logique du jeu en deviendrait d'une complexité sans nom.
+    </p>
+    <p>
+        La troisième brique de gestion de l'affichage est le pendant direct du groupe : son état.
+    </p>
+    <p>
+        Pour résumer rapidement, l'état de groupe est constitué d'un groupe, et d'un certain nombre de sprites de ce groupe.
+    </p>
+    <p>
+        Ainsi, si on décide d'afficher cet état de groupe, seuls les sprites choisis sont affichés, tous les autres restant
+        à l'état masqué.
+    </p>
+    <p>Un petit exemple s'impose</p>
+    <div class="game-def top-displayer mh" data-script="group-states">
+        <div class="bottom-controls">
+            <button id="state1-display">state1</button>
+            <button id="state2-display">state2</button>
+            <button id="state3-display">state3</button>
+            <button id="state4-display">state3</button>
+        </div>
+    </div>
+    <div class="script-def bottom-displayer" data-script="group-states">
+
+    </div>
+</section>
+<section>
+    <h2>Un peu lourd, non ?</h2>
+    <p>
+        Vous avez dû vous faire cette remarque : ce code n'est-il pas un petit peu verbeux ?
+    </p>
+    <p>
+        Effectivement ! On instancie chacun des fichiers, on créé les instances de sprite qu'on ajoute au DOM, on créé
+        le groupe, et les différents états de ce groupe, en exposant à chaque fois des variables qu'on n'aura pas forcément
+        à manipuler plus tard. En bref, ce n'est pas très synthétique, tout ça...
+    </p>
+    <p>
+        C'est là que nous allons faire connaissance de la classe GameScene, et de son extension HTMLGameScene, qui va
+        nous éviter tout ce verbiage inutile, et nous permettre de condenser nos déclarations de sprites, groupes et états, tout en
+        permettant d'accéder à celles-ci à la demande.
+    </p>
+</section>
