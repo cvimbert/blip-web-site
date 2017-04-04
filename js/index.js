@@ -4,7 +4,10 @@
 
 (function () {
 
-    var dictionary = ["Sprite", "File"];
+    var classesDictionary = {
+        "Sprite": "display_sprite",
+        "File": "files_file"
+    };
 
     var tableOfContent = {
         "blip-project": {
@@ -26,9 +29,16 @@
 
     var hljs = require("highlightjs");
     var $ = require("jquery");
+    var TweenLite = require("TweenLite");
 
     var qParam = getId("q");
     var rParam = getId("r");
+
+    function getDocumentationPath(path, className) {
+        var docPath = "documentation/classes/";
+        var docFile = "_core_src_" + path + "_class_." + className.toLowerCase() + ".html";
+        return docPath + docFile;
+    }
 
     function setLocaleUrl() {
         setUrl([qParam, rParam]);
@@ -42,7 +52,7 @@
         loadPagesSet(id, contentSet["content"], function (datas, cid) {
 
             if (!rParam) {
-                rParam = Object.keys(datas)[0];
+                rParam = contentSet["content"][0];
                 pushLocaleUrl();
             }
 
@@ -168,8 +178,21 @@
             var codeBlock = $("code", this);
 
             $.get("examples/" + scriptId + "/" + scriptId + ".ts", function (res) {
-                res = res.applyDictionary(dictionary);
+                res = res.applyDictionary(classesDictionary);
                 codeBlock.html(res);
+
+                $(".dictionary-entry", codeBlock).each(function () {
+                    var classId = $(this).data("class");
+                    var path = $(this).data("path");
+
+                    var content = $(this).html();
+                    var link = $("<a></a>");
+                    link.html(content);
+                    link.attr("href", getDocumentationPath(path, classId));
+                    link.attr("target", "_blank");
+                    $(this).html(link);
+                });
+
                 hljs.highlightBlock(codeBlock.get(0));
             });
         });
@@ -255,9 +278,11 @@
     String.prototype.applyDictionary = function (dictionary) {
         var tmp = this;
 
-        for (var i = 0; i < dictionary.length; i++) {
-            tmp = tmp.replaceAll(dictionary[i], "<span class='dictionary-entry " + dictionary[i].toLowerCase() + "-entry'>TMP</span>");
-            tmp = tmp.replaceAll("TMP", dictionary[i]);
+        for (var id in dictionary) {
+            if (dictionary.hasOwnProperty(id)) {
+                tmp = tmp.replaceAll(id, "<span data-path='" + dictionary[id] + "' data-class='" + id.toLowerCase() + "' class='dictionary-entry " + id.toLowerCase() + "-entry'>TMP</span>");
+                tmp = tmp.replaceAll("TMP", id);
+            }
         }
 
         return tmp;
