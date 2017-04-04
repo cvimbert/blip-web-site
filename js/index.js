@@ -31,8 +31,8 @@
     var $ = require("jquery");
     var TweenLite = require("TweenLite");
 
-    var qParam = getId("q");
-    var rParam = getId("r");
+    var qParam = getQueryStringParam("q");
+    var rParam = getQueryStringParam("r");
 
     function getDocumentationPath(path, className) {
         var docPath = "documentation/classes/";
@@ -321,7 +321,7 @@
         return path.replace("/", "-");
     }
 
-    function getId(key) {
+    function getQueryStringParam(key) {
         var searchStr = document.location.search;
 
         if (searchStr.charAt(0) === "?") {
