@@ -50,7 +50,10 @@
             var terUls = {};
 
             // todo: attention, ici l'ordre n'est pas bon !!!
-            for (var pageId in datas) {
+            for (var i = 0; i < contentSet["content"].length; i++) {
+
+                var pageId = contentSet["content"][i];
+
                 if (datas.hasOwnProperty(pageId)) {
                     var pageContent = $("<div></div>");
                     pageContent.html($(datas[pageId]));
