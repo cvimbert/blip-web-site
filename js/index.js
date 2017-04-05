@@ -48,6 +48,14 @@
         pushUrl([qParam, rParam]);
     }
 
+    function closeLevel(levelClass) {
+
+    }
+
+    function openLevel(levelClass) {
+        
+    }
+
     function updateLevels() {
         var menu = $("#index");
 
@@ -268,6 +276,7 @@
                     rParam = null;
                     pushLocaleUrl();
 
+                    // à remplacer par une fermeture clean du level
                     $(".level-1-sub").html("");
 
                     generateSubMenu(qp, tableOfContent[qp], subs);
