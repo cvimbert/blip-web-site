@@ -48,6 +48,25 @@
         pushUrl([qParam, rParam]);
     }
 
+    function updateLevels() {
+        var menu = $("#index");
+
+        // q-level
+        $(".q-level", menu).removeClass("current");
+        $(".q-level." + qParam, menu).addClass("current");
+
+        // r-level
+        $(".r-level", menu).removeClass("current");
+        $(".r-level." + rParam, menu).addClass("current");
+    }
+
+    function updateSectionsLevel(sectionId) {
+        var menu = $("#index");
+
+        $(".section-level", menu).removeClass("current");
+        $(".section-level." + sectionId, menu).addClass("current");
+    }
+
     function generateSubMenu(id, contentSet, subs) {
         loadPagesSet(id, contentSet["content"], function (datas, cid) {
 
@@ -59,7 +78,6 @@
             var pageContents = {};
             var terUls = {};
 
-            // todo: attention, ici l'ordre n'est pas bon !!!
             for (var i = 0; i < contentSet["content"].length; i++) {
 
                 var pageId = contentSet["content"][i];
@@ -69,14 +87,16 @@
                     pageContent.html($(datas[pageId]));
 
                     var title = $("h1", pageContent).html();
-                    var subLi = $("<li class='level-2'></li>");
+                    var subLi = $("<li class='level-2'><span class='r-level'></span></li>");
                     subLi.data("pid", pageId);
-                    subLi.html(title);
+                    $("span", subLi).html(title);
+                    $("span", subLi).addClass(pageId);
 
                     subLi.on("click", function () {
                         var qr = $(this).data("pid");
                         rParam = qr;
                         $(".level-2-sub").html("");
+                        document.body.scrollTop = 0;
                         generateSubSubMenu(terUls[qr], pageContents[qr]);
                         pushLocaleUrl();
                     });
@@ -106,15 +126,18 @@
 
             var sectionTitle = $("h2", this).html();
 
-            var subSubLi = $("<li class='level-3'></li>");
-            subSubLi.html(sectionTitle);
+            var subSubLi = $("<li class='level-3'><span class='section-level'></span></li>");
+            $("span", subSubLi).html(sectionTitle);
+            $("span", subSubLi).addClass("section-" + i);
 
             subSubLi.on("click", function () {
                 document.location.href = "#section-" + i;
-                displayPage(pageContent);
+                updateSectionsLevel("section-" + i);
             });
 
             containerUl.append(subSubLi);
+
+            updateSectionsLevel("section-0");
         });
 
         displayPage(pageContent);
@@ -204,6 +227,8 @@
             elem.attr("id", scriptId + "-container");
             loadScript(scriptId);
         });
+
+        updateLevels();
     }
 
     function loadPages(callback) {
@@ -224,16 +249,19 @@
             if (tableOfContent.hasOwnProperty(id)) {
                 var contentSet = tableOfContent[id];
 
-                var li = $("<li class='level-1'></li>");
+                var li = $("<li class='level-1'><span class='q-level'></span></li>");
                 li.attr("id", "lv1-" + id);
-                li.html(contentSet["title"]);
                 li.data("lid", id);
+                $("span", li).html(contentSet["title"]);
+                $("span", li).addClass(id);
                 index2Container.append(li);
 
                 li.on("click", function () {
 
                     // pour un effet ulterieur (joli effet de repliage)
                     //alert (subs[qParam].height());
+
+                    document.body.scrollTop = 0;
 
                     var qp = $(this).data("lid");
                     qParam = qp;
