@@ -48,12 +48,60 @@
         pushUrl([qParam, rParam]);
     }
 
-    function closeLevel(levelClass) {
-
+    function getLinearTime(duration, height) {
+       // return (height / 120) * duration;
+        return duration;
     }
 
-    function openLevel(levelClass) {
-        
+    var time;
+
+    function closeLevel(levelClass) {
+        var menu = $("#index");
+        $(levelClass, menu).each(function () {
+            if ($(this).html() !== "") {
+
+                var elem = $(this);
+                var height = elem.height();
+
+                time = getLinearTime(0.6, height);
+
+                TweenLite.to(this, time , {
+                    css: {
+                        opacity: 0,
+                        height: 0
+                    },
+                    onComplete: function () {
+                        elem.html("");
+                        TweenLite.set(elem, {
+                            clearProps: "all"
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    function openLevel(levelElement) {
+        var height = levelElement.height();
+
+        TweenLite.set(levelElement, {
+            css: {
+                height: 0,
+                opacity: 0
+            }
+        });
+
+        TweenLite.to(levelElement, time, {
+            css: {
+                height: height,
+                opacity: 1
+            },
+            onComplete: function () {
+                TweenLite.set(levelElement, {
+                    clearProps: "all"
+                });
+            }
+        });
     }
 
     function updateLevels() {
@@ -75,7 +123,7 @@
         $(".section-level." + sectionId, menu).addClass("current");
     }
 
-    function generateSubMenu(id, contentSet, subs) {
+    function generateSubMenu(id, contentSet, subs, animated) {
         loadPagesSet(id, contentSet["content"], function (datas, cid) {
 
             if (!rParam) {
@@ -102,10 +150,23 @@
 
                     subLi.on("click", function () {
                         var qr = $(this).data("pid");
+
+                        if (qr === rParam) {
+                            return;
+                        }
+
                         rParam = qr;
-                        $(".level-2-sub").html("");
+
                         document.body.scrollTop = 0;
+
+                        // ici on referme les menus ouverts
+                        closeLevel(".level-2-sub");
+
                         generateSubSubMenu(terUls[qr], pageContents[qr]);
+
+                        // et on ouvre le nouveau menus générés
+                        openLevel(terUls[qr]);
+
                         pushLocaleUrl();
                     });
 
@@ -120,6 +181,10 @@
                         generateSubSubMenu(terUl, pageContent);
                     }
                 }
+            }
+
+            if (animated) {
+                openLevel(subs[cid]);
             }
         });
     }
@@ -266,20 +331,21 @@
 
                 li.on("click", function () {
 
-                    // pour un effet ulterieur (joli effet de repliage)
-                    //alert (subs[qParam].height());
+                    var qp = $(this).data("lid");
+
+                    if (qp === qParam) {
+                        return;
+                    }
 
                     document.body.scrollTop = 0;
 
-                    var qp = $(this).data("lid");
                     qParam = qp;
                     rParam = null;
                     pushLocaleUrl();
 
-                    // à remplacer par une fermeture clean du level
-                    $(".level-1-sub").html("");
+                    closeLevel(".level-1-sub");
 
-                    generateSubMenu(qp, tableOfContent[qp], subs);
+                    generateSubMenu(qp, tableOfContent[qp], subs, true);
                 });
 
                 var sub = $("<ul class='level-1-sub'></ul>");

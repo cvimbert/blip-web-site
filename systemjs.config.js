@@ -12,7 +12,7 @@
             src: "src",
             jquery: "npm:jquery/dist/jquery",
             highlightjs: "npm:highlight.js/lib/index",
-            TweenLite: "npm:gsap/TweenLite",
+            TweenLite: "npm:gsap/src/uncompressed/TweenMax",
             'blip-framework/core': 'npm:blip-framework/core/index'
         },
         packages: {
