@@ -39,10 +39,36 @@
 
         }
 
-        p, ul {
+        p, div {
             font-family: Lato;
-            margin-left: 60px;
         }
+
+        .level-1-sub, .level-2-sub, .level-3 {
+            margin-left: 22px;
+            overflow: hidden;
+        }
+
+        .level-1, .level-2, .level-3 {
+            padding-bottom: 8px;
+            padding-top: 8px;
+            cursor: pointer;
+        }
+
+        .level-1:before {
+            content: "o";
+            margin-right: 5px;
+        }
+
+        .level-2:before {
+            content: "o";
+            margin-right: 5px;
+        }
+
+        .level-3:before {
+            content: "o";
+            margin-right: 5px;
+        }
+
 
         .menu-item {
             cursor: pointer;
@@ -243,9 +269,9 @@
 <div id="container">
     <div id="left">
         <div class="list-container">
-            <ul id="index">
+            <div id="index">
 
-            </ul>
+            </div>
         </div>
     </div>
     <div id="right">

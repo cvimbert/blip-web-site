@@ -57,8 +57,11 @@
 
     function closeLevel(levelClass) {
         var menu = $("#index");
+
         $(levelClass, menu).each(function () {
             if ($(this).html() !== "") {
+
+                console.log("ok");
 
                 var elem = $(this);
                 var height = elem.height();
@@ -143,7 +146,7 @@
                     pageContent.html($(datas[pageId]));
 
                     var title = $("h1", pageContent).html();
-                    var subLi = $("<li class='level-2'><span class='r-level'></span></li>");
+                    var subLi = $("<div class='level-2'><span class='r-level'></span></div>");
                     subLi.data("pid", pageId);
                     $("span", subLi).html(title);
                     $("span", subLi).addClass(pageId);
@@ -172,7 +175,8 @@
 
                     subs[cid].append(subLi);
 
-                    var terUl = $("<ul class='level-2-sub'></ul>");
+                    var terUl = $("<div class='level-2-sub'><!--<div class='sub-content'></div>--></div>");
+                    //terUl = $(".sub-content", terUl);
                     subs[cid].append(terUl);
                     terUls[pageId] = terUl;
                     pageContents[pageId] = pageContent;
@@ -199,7 +203,7 @@
 
             var sectionTitle = $("h2", this).html();
 
-            var subSubLi = $("<li class='level-3'><span class='section-level'></span></li>");
+            var subSubLi = $("<div class='level-3'><span class='section-level'></span></div>");
             $("span", subSubLi).html(sectionTitle);
             $("span", subSubLi).addClass("section-" + i);
 
@@ -322,7 +326,7 @@
             if (tableOfContent.hasOwnProperty(id)) {
                 var contentSet = tableOfContent[id];
 
-                var li = $("<li class='level-1'><span class='q-level'></span></li>");
+                var li = $("<div class='level-1'><span class='q-level'></span></div>");
                 li.attr("id", "lv1-" + id);
                 li.data("lid", id);
                 $("span", li).html(contentSet["title"]);
@@ -348,7 +352,8 @@
                     generateSubMenu(qp, tableOfContent[qp], subs, true);
                 });
 
-                var sub = $("<ul class='level-1-sub'></ul>");
+                var sub = $("<div class='level-1-sub'><!--<div class='sub-content'></div>--></div>");
+                //sub = $(".sub-content", sub);
                 sub.attr("id", id + "-sub");
                 index2Container.append(sub);
 
