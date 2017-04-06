@@ -61,8 +61,6 @@
         $(levelClass, menu).each(function () {
             if ($(this).html() !== "") {
 
-                console.log("ok");
-
                 var elem = $(this);
                 var height = elem.height();
 
