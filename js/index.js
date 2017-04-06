@@ -55,16 +55,24 @@
 
     var time;
 
-    function closeLevel(levelClass) {
+    function closeLevel(levelClass, subContainerClass) {
         var menu = $("#index");
 
         $(levelClass, menu).each(function () {
-            if ($(this).html() !== "") {
+            if ($(subContainerClass, this).html() !== "") {
 
                 var elem = $(this);
                 var height = elem.height();
 
                 time = getLinearTime(0.6, height);
+
+                TweenLite.set(this, {
+                    css: {
+                        height: height
+                    }
+                });
+
+                $(subContainerClass, this).addClass("absolute-bottom");
 
                 TweenLite.to(this, time , {
                     css: {
@@ -72,7 +80,8 @@
                         height: 0
                     },
                     onComplete: function () {
-                        elem.html("");
+                        $(subContainerClass, elem).removeClass("absolute-bottom");
+                        $(subContainerClass, elem).html("");
                         TweenLite.set(elem, {
                             clearProps: "all"
                         });
@@ -82,7 +91,7 @@
         });
     }
 
-    function openLevel(levelElement) {
+    function openLevel(levelElement, subContainerClass) {
         var height = levelElement.height();
 
         TweenLite.set(levelElement, {
@@ -92,12 +101,15 @@
             }
         });
 
+        $(subContainerClass, levelElement).addClass("absolute-bottom");
+
         TweenLite.to(levelElement, time, {
             css: {
                 height: height,
                 opacity: 1
             },
             onComplete: function () {
+                $(subContainerClass, levelElement).removeClass("absolute-bottom");
                 TweenLite.set(levelElement, {
                     clearProps: "all"
                 });
@@ -161,21 +173,20 @@
                         document.body.scrollTop = 0;
 
                         // ici on referme les menus ouverts
-                        closeLevel(".level-2-sub");
+                        closeLevel(".level-2-sub", ".sub-content-2");
 
                         generateSubSubMenu(terUls[qr], pageContents[qr]);
 
                         // et on ouvre le nouveau menus générés
-                        openLevel(terUls[qr]);
+                        openLevel(terUls[qr], ".sub-content-2");
 
                         pushLocaleUrl();
                     });
 
-                    subs[cid].append(subLi);
+                    $(".sub-content-1", subs[cid]).append(subLi);
 
-                    var terUl = $("<div class='level-2-sub'><!--<div class='sub-content'></div>--></div>");
-                    //terUl = $(".sub-content", terUl);
-                    subs[cid].append(terUl);
+                    var terUl = $("<div class='level-2-sub'><div class='sub-content-2'></div></div>");
+                    $(".sub-content-1", subs[cid]).append(terUl);
                     terUls[pageId] = terUl;
                     pageContents[pageId] = pageContent;
 
@@ -186,7 +197,7 @@
             }
 
             if (animated) {
-                openLevel(subs[cid]);
+                openLevel(subs[cid], ".sub-content-1");
             }
         });
     }
@@ -210,7 +221,7 @@
                 updateSectionsLevel("section-" + i);
             });
 
-            containerUl.append(subSubLi);
+            $(".sub-content-2", containerUl).append(subSubLi);
 
             updateSectionsLevel("section-0");
         });
@@ -345,13 +356,12 @@
                     rParam = null;
                     pushLocaleUrl();
 
-                    closeLevel(".level-1-sub");
+                    closeLevel(".level-1-sub", ".sub-content-1");
 
                     generateSubMenu(qp, tableOfContent[qp], subs, true);
                 });
 
-                var sub = $("<div class='level-1-sub'><!--<div class='sub-content'></div>--></div>");
-                //sub = $(".sub-content", sub);
+                var sub = $("<div class='level-1-sub'><div class='sub-content-1'></div></div>");
                 sub.attr("id", id + "-sub");
                 index2Container.append(sub);
 
