@@ -49,7 +49,7 @@
     }
 
     function getLinearTime(duration, height) {
-       // return (height / 120) * duration;
+        //return (height / 100) * duration;
         return duration;
     }
 
@@ -91,7 +91,7 @@
         });
     }
 
-    function openLevel(levelElement, subContainerClass) {
+    function openLevel(levelElement, subContainerClass, delay) {
         var height = levelElement.height();
 
         TweenLite.set(levelElement, {
@@ -103,18 +103,24 @@
 
         $(subContainerClass, levelElement).addClass("absolute-bottom");
 
-        TweenLite.to(levelElement, time, {
-            css: {
-                height: height,
-                opacity: 1
-            },
-            onComplete: function () {
-                $(subContainerClass, levelElement).removeClass("absolute-bottom");
-                TweenLite.set(levelElement, {
-                    clearProps: "all"
-                });
-            }
-        });
+        if (!delay) delay = 0;
+
+        setTimeout(function () {
+
+            TweenLite.to(levelElement, time, {
+                css: {
+                    height: height,
+                    opacity: 1
+                },
+                onComplete: function () {
+                    $(subContainerClass, levelElement).removeClass("absolute-bottom");
+                    TweenLite.set(levelElement, {
+                        clearProps: "all"
+                    });
+                }
+            });
+
+        }, delay * 1000);
     }
 
     function updateLevels() {
@@ -178,7 +184,7 @@
                         generateSubSubMenu(terUls[qr], pageContents[qr]);
 
                         // et on ouvre le nouveau menus générés
-                        openLevel(terUls[qr], ".sub-content-2");
+                        openLevel(terUls[qr], ".sub-content-2", 0.7);
 
                         pushLocaleUrl();
                     });
@@ -197,7 +203,7 @@
             }
 
             if (animated) {
-                openLevel(subs[cid], ".sub-content-1");
+                openLevel(subs[cid], ".sub-content-1", 0.7);
             }
         });
     }
