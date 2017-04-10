@@ -69,6 +69,10 @@
         //return (height / 100) * duration;
         return duration;
     }
+    
+    function setNavigationArrowVisibility() {
+        
+    }
 
     var time;
 
@@ -159,6 +163,45 @@
         $(".section-level." + sectionId, menu).addClass("current");
     }
 
+    function completeOpenRLevel(qq, qr) {
+        if (qr === rParam) {
+            return;
+        }
+
+        rParam = qr;
+
+        document.body.scrollTop = 0;
+
+        // ici on referme les menus ouverts
+        closeLevel(".level-2-sub", ".sub-content-2");
+
+        generateSubSubMenu(terUlsIndex[qq][qr], pagesContentIndex[qq][qr]);
+
+        // et on ouvre le nouveau menus générés
+        openLevel(terUlsIndex[qq][qr], ".sub-content-2", 0.7);
+
+        pushLocaleUrl();
+    }
+
+    function completeOpenQLevel(qp) {
+        if (qp === qParam) {
+            return;
+        }
+
+        document.body.scrollTop = 0;
+
+        qParam = qp;
+        rParam = null;
+        pushLocaleUrl();
+
+        closeLevel(".level-1-sub", ".sub-content-1");
+
+        generateSubMenu(qp, tableOfContent[qp], subs, true);
+    }
+
+    var terUlsIndex = {};
+    var pagesContentIndex = {};
+
     function generateSubMenu(id, contentSet, subs, animated) {
         loadPagesSet(id, contentSet["content"], function (datas, cid) {
 
@@ -168,7 +211,9 @@
             }
 
             var pageContents = {};
+            pagesContentIndex[id] = pageContents;
             var terUls = {};
+            terUlsIndex[id] = terUls;
 
             for (var i = 0; i < contentSet["content"].length; i++) {
 
@@ -186,24 +231,7 @@
 
                     subLi.on("click", function () {
                         var qr = $(this).data("pid");
-
-                        if (qr === rParam) {
-                            return;
-                        }
-
-                        rParam = qr;
-
-                        document.body.scrollTop = 0;
-
-                        // ici on referme les menus ouverts
-                        closeLevel(".level-2-sub", ".sub-content-2");
-
-                        generateSubSubMenu(terUls[qr], pageContents[qr]);
-
-                        // et on ouvre le nouveau menus générés
-                        openLevel(terUls[qr], ".sub-content-2", 0.7);
-
-                        pushLocaleUrl();
+                        completeOpenRLevel(id, qr);
                     });
 
                     $(".sub-content-1", subs[cid]).append(subLi);
@@ -352,13 +380,14 @@
         updateLevels();
     }
 
-    function loadPages(callback) {
+    var subs = {};
+
+    function loadPages() {
 
         var pagesHtml = {};
         var count = 0;
 
         var index2Container = $("#index");
-        var subs = {};
 
         if (!qParam) {
             qParam = Object.keys(tableOfContent)[0];
@@ -378,22 +407,8 @@
                 index2Container.append(li);
 
                 li.on("click", function () {
-
                     var qp = $(this).data("lid");
-
-                    if (qp === qParam) {
-                        return;
-                    }
-
-                    document.body.scrollTop = 0;
-
-                    qParam = qp;
-                    rParam = null;
-                    pushLocaleUrl();
-
-                    closeLevel(".level-1-sub", ".sub-content-1");
-
-                    generateSubMenu(qp, tableOfContent[qp], subs, true);
+                    completeOpenQLevel(qp);
                 });
 
                 var sub = $("<div class='level-1-sub'><div class='sub-content-1'></div></div>");
@@ -527,8 +542,34 @@
         System.load(currentScriptId).catch(function(err){ console.error(err); });
     }
 
-    loadPages(function (pages) {
-        // plus rien !!!
+    $("#previous-article").on("click", function () {
+        var currentRList = tableOfContent[qParam].content;
+        var rIndex = currentRList.indexOf(rParam);
+
+        if (rIndex <= 0) {
+            var qList = Object.keys(tableOfContent);
+            var qIndex = qList.indexOf(qParam);
+            completeOpenQLevel(qList[qIndex - 1]);
+        } else {
+            completeOpenRLevel(qParam, currentRList[rIndex - 1]);
+        }
     });
+
+    $("#next-article").on("click", function () {
+        var currentRList = tableOfContent[qParam].content;
+        var rIndex = currentRList.indexOf(rParam);
+
+        if (rIndex >= currentRList.length - 1) {
+            // on est en fin de rList
+            var qList = Object.keys(tableOfContent);
+            var qIndex = qList.indexOf(qParam);
+            completeOpenQLevel(qList[qIndex + 1]);
+        } else {
+            // il reste encore des éléments dans la rList à voir
+            completeOpenRLevel(qParam, currentRList[rIndex + 1]);
+        }
+    });
+
+    loadPages();
 
 })();
