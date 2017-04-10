@@ -33,6 +33,23 @@
 
     var qParam = getQueryStringParam("q");
     var rParam = getQueryStringParam("r");
+    
+    function openGlossaryPopup(definitionId) {
+        $.get("glossary/" + definitionId + ".html", function (definitionHtml) {
+            var popup = $("#glossary-popup");
+            $(".content", popup).html(definitionHtml);
+            popup.css("display", "block");
+            $(".close-button", popup).on("click", function () {
+                closeGlossaryPopup();
+            });
+        });
+    }
+
+    function closeGlossaryPopup() {
+        var popup = $("#glossary-popup");
+        popup.css("display", "none");
+        $(".close-button", popup).off("click");
+    }
 
     function getDocumentationPath(path, className) {
         var docPath = "documentation/classes/";
@@ -271,7 +288,19 @@
                     });
                 });
             }
+
+            // glossaire
+            var glossaryEntries = $(".glossary", this);
+
+            glossaryEntries.each(function () {
+                var item = $(this);
+                item.on("click", function () {
+                    var entryName = item.data("glossary");
+                    openGlossaryPopup(entryName)
+                });
+            });
         });
+
 
         var scriptContainers = $(".script-def", contentHtml);
         var gameContainers = $(".game-def", contentHtml);
