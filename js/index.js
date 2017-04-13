@@ -70,8 +70,67 @@
         return duration;
     }
     
-    function setNavigationArrowVisibility() {
-        
+    function setNavigationArrowsVisibility() {
+        var qKeys = Object.keys(tableOfContent);
+        var rKeys = tableOfContent[qParam]["content"];
+
+        var qIndex = qKeys.indexOf(qParam);
+        var rIndex = rKeys.indexOf(rParam);
+
+        if (qIndex === 0 && rIndex === 0) {
+            $("#previous-article").css("visibility", "hidden");
+        } else {
+            $("#previous-article").css("visibility", "visible");
+        }
+
+        if (qIndex >= qKeys.length - 1 && rIndex >= rKeys.length - 1) {
+            $("#next-article").css("visibility", "hidden");
+        } else {
+            $("#next-article").css("visibility", "visible");
+        }
+    }
+
+    function getClosestToBaseLineElementByTagName(tagName, baseLine) {
+        var elements = document.getElementsByTagName(tagName);
+        return getClosestToBaseLineElement(elements, baseLine);
+    }
+
+    function getClosestToBaseLineElement(elements, baseLine) {
+        var closest;
+        var minDistance = Number.MAX_VALUE;
+
+        for (var i = 0; i < elements.length; i++) {
+
+            var rect = elements[i].getBoundingClientRect();
+            var dist = Math.abs(rect["top"] - baseLine);
+
+            if (dist < minDistance) {
+                closest = elements[i];
+                minDistance = dist;
+            }
+        }
+
+        return closest;
+    }
+
+    function getVisibleTagNameElements(tagName) {
+        var elements = document.getElementsByTagName(tagName);
+        return getVisibleElements(elements);
+    }
+
+    function getVisibleElements(elements) {
+        var retElems = [];
+
+        for (var i = 0; i < elements.length; i++) {
+            var element = elements[i];
+            var rect = element.getBoundingClientRect();
+
+            if (rect["top"] > 0 && rect["bottom"] < window.innerHeight) {
+                retElems.push(element);
+            }
+        }
+
+        return retElems;
     }
 
     var time;
@@ -378,7 +437,19 @@
         });
 
         updateLevels();
+        setNavigationArrowsVisibility();
+        getVisibleTagNameElements("h2");
     }
+
+    $(document).on("scroll", function () {
+        var scrollRatio = document.body.scrollTop / (document.body.scrollHeight - window.innerHeight);
+        var baseLinePosition = window.innerHeight * scrollRatio;
+
+        console.log(baseLinePosition, scrollRatio);
+
+        var closestElement = getClosestToBaseLineElementByTagName("h2", baseLinePosition);
+        console.log(closestElement.innerHTML);
+    });
 
     var subs = {};
 
