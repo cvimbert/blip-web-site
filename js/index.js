@@ -95,22 +95,38 @@
         return getClosestToBaseLineElement(elements, baseLine);
     }
 
+
+    var latest;
+
     function getClosestToBaseLineElement(elements, baseLine) {
         var closest;
         var minDistance = Number.MAX_VALUE;
 
         for (var i = 0; i < elements.length; i++) {
 
+            //setDocumentScroll(elements[i]);
+
             var rect = elements[i].getBoundingClientRect();
             var dist = Math.abs(rect["top"] - baseLine);
 
-            if (dist < minDistance) {
+            if (dist < minDistance && rect["top"] > 0 && rect["bottom"] <= window.innerHeight) {
                 closest = elements[i];
+                latest = closest;
                 minDistance = dist;
             }
         }
 
+        if (!closest) closest = latest;
         return closest;
+    }
+
+    function setDocumentScroll(element) {
+        element = element[0];
+        var pos = element.offsetTop;
+        var fact = pos / document.body.clientHeight;
+        var baseLine = fact * window.innerHeight;
+        var scTop = pos - baseLine;
+        document.body.scrollTop = scTop;
     }
 
     function getVisibleTagNameElements(tagName) {
@@ -320,15 +336,20 @@
 
             $(this).attr("id", "section-" + i);
 
+            $("h2", this).data("section", i);
             var sectionTitle = $("h2", this).html();
 
             var subSubLi = $("<div class='level-3'><span class='section-level'></span></div>");
+            subSubLi.data("section", i);
             $("span", subSubLi).html(sectionTitle);
             $("span", subSubLi).addClass("section-" + i);
 
             subSubLi.on("click", function () {
-                document.location.href = "#section-" + i;
-                updateSectionsLevel("section-" + i);
+                //document.location.href = "#section-" + i;
+                //updateSectionsLevel("section-" + i);
+                var sectionId = $(this).data("section");
+                var elem = $("#section-" + sectionId);
+                setDocumentScroll(elem);
             });
 
             $(".sub-content-2", containerUl).append(subSubLi);
@@ -445,10 +466,12 @@
         var scrollRatio = document.body.scrollTop / (document.body.scrollHeight - window.innerHeight);
         var baseLinePosition = window.innerHeight * scrollRatio;
 
-        console.log(baseLinePosition, scrollRatio);
-
         var closestElement = getClosestToBaseLineElementByTagName("h2", baseLinePosition);
-        console.log(closestElement.innerHTML);
+        var sectionId = $(closestElement).data("section");
+
+        var menu = $("#index");
+        $(".section-level", menu).removeClass("current");
+        $(".section-" + sectionId, menu).addClass("current");
     });
 
     var subs = {};
